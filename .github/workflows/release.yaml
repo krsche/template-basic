@@ -18,7 +18,8 @@ jobs:
         with:
           fetch-depth: 0 # semantic release needs all the history
       - uses: actions/setup-node@v2
+      - run: sudo npm install --global conventional-changelog-conventionalcommits@5 semantic-release@19
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release@19
+        run: semantic-release
