@@ -1,4 +1,4 @@
-name: commitlint
+name: ci
 
 on:
   workflow_dispatch:
@@ -31,4 +31,23 @@ jobs:
           else
             commitlint -V --from HEAD~1
           fi
+  
+  release:
+    if: github.ref == 'refs/heads/main'
+    needs: commitlint
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write       # for creating the gh release
+      issues: write         # for commenting on related issues
+      pull-requests: write  # for commenting on related pull-requests
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # semantic release needs all the history
+      - uses: actions/setup-node@v2
+      - run: sudo npm install --global conventional-changelog-conventionalcommits@5 semantic-release@19
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: semantic-release
           
