@@ -1,0 +1,29 @@
+name: commitlint
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-22.04
+      
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 
+      
+      - uses: actions/setup-node@v2
+      
+      - run: sudo npm install --global @commitlint/{config-conventional,cli}@17
+      
+      - if: github.event_name == 'pull_request'
+        name: commitlint (pr)
+        run: commitlint --from HEAD~${{ github.event.pull_request.commits }} 
+      
+      - if: github.event_name != 'pull_request'
+        name: commitlint (push)
+        run: commitlint --from ${{ github.event.push.before }} 
+        # use .before instead of HEAD~1 so that pushes with multiple commits are completely covered as well
+        # --from is not inclusive, so HEAD~1 will only analyze HEAD
