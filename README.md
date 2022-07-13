@@ -1,6 +1,6 @@
 # Repository Template-Basic
 
-Can be used with `gh repo create trackdocs/some-repo --private --template trackdocs/template-basic`
+Can be used with `gh repo create --private --clone --template krsche/template-basic krsche/some-repo`
 
 ## Features
 
