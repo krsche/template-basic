@@ -7,13 +7,15 @@ on:
 
 jobs:
   commitlint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
-          fetch-depth: 0 
-      - uses: actions/setup-node@v2
-      - run: sudo npm install --global @commitlint/{config-conventional,cli}@17
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - run: sudo npm install --global @commitlint/{config-conventional,cli}@20
       - if: github.event_name == 'pull_request'
         name: commitlint (pr)
         run: commitlint -V --from HEAD~${{ github.event.pull_request.commits }} 
@@ -35,19 +37,21 @@ jobs:
   release:
     if: github.ref == 'refs/heads/main'
     needs: commitlint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       contents: write       # for creating the gh release
       issues: write         # for commenting on related issues
       pull-requests: write  # for commenting on related pull-requests
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # semantic release needs all the history
-      - uses: actions/setup-node@v2
-      - run: sudo npm install --global conventional-changelog-conventionalcommits@5 semantic-release@19
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - run: sudo npm install --global conventional-changelog-conventionalcommits@9 semantic-release@25
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: semantic-release
-          
+
