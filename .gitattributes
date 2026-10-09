@@ -4,6 +4,10 @@
 .bash* text eol=lf
 
 # --- GIT LFS ---
+# This section controls which files are treated as binary and therefore use GIT LFS for storage.
+# To verify a file will be committed to GIT LFS, run `git check-attr filter -- <file>` and look for `filter: lfs`.
+# To check if a file is already tracked by GIT LFS, run `git lfs ls-files | grep <file>`.
+
 # Archives
 *.7z filter=lfs diff=lfs merge=lfs -text
 *.br filter=lfs diff=lfs merge=lfs -text
